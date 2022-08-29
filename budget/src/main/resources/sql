@@ -1,0 +1,155 @@
+CREATE TABLE Earn_Income(
+income_id int,
+user_id int,
+amount float,
+title char(255),
+description char(255),
+category char(255),
+date date,
+PRIMARY KEY (income_id),
+FOREIGN KEY (user_id) REFERENCES Budget_Member
+ON DELETE CASCADE
+);
+CREATE TABLE Spend_Expense(
+expense_id int,
+user_id int,
+amount float,
+title char(255),
+description char(255),
+category char(255),
+date date,
+PRIMARY KEY (expense_id),
+FOREIGN KEY (user_id) REFERENCES Budget_Member
+ON DELETE CASCADE
+);
+CREATE TABLE Member_Location(
+postal_code char(255),
+country char(255),
+PRIMARY KEY (postal_code)
+);
+
+CREATE TABLE Budget_Member(
+user_id int,
+username char(255),
+email char(255),
+password char(255),
+first_name char(255),
+last_name char(255),
+employment_position char(255),
+postal_code char(255),
+PRIMARY KEY (user_id)
+);
+
+CREATE TABLE Assistant_Location(
+postal_code char(255),
+country char(255),
+PRIMARY KEY (postal_code)
+);
+
+CREATE TABLE Budget_Assistant(
+user_id int,
+username char(255),
+email char(255),
+password char(255),
+first_name char(255),
+last_name char(255),
+area_of_expertise char(255),
+postal_code char(255),
+years_of_experience int,
+PRIMARY KEY (user_id)
+);
+
+
+CREATE TABLE Ask_Question(
+question_id int,
+user_id int,
+title char(255),
+description char(255),
+date date,
+PRIMARY KEY (question_id),
+FOREIGN KEY (user_id) REFERENCES Budget_Member
+ON DELETE NO ACTION
+);
+
+CREATE TABLE Answer(
+answer_id int,
+question_id int,
+user_id int,
+title char(255),
+description char(255),
+date date,
+PRIMARY KEY (answer_id, question_id),
+FOREIGN KEY (question_id) REFERENCES Ask_Question
+ON DELETE CASCADE
+FOREIGN KEY (user_id) REFERENCES Budget_Member
+ON DELETE NO ACTION
+);
+
+CREATE TABLE Budget_Plan_Duration(
+start_date date,
+end_date date,
+total_duration int,
+PRIMARY KEY (start_date, end_date),
+);
+
+CREATE TABLE Plan_Budget_Plan(
+budget_plan_id int,
+user_id int,
+name char(255),
+description char(255),
+start_date date,
+end_date date,
+PRIMARY KEY (budget_plan_id),
+FOREIGN KEY (user_id) REFERENCES Budget_Member
+ON DELETE CASCADE
+);
+
+CREATE TABLE Budget_Goal_Duration(
+start_date date,
+end_date date,
+total_duration int,
+PRIMARY KEY (start_date, end_date),
+);
+
+CREATE TABLE Set_Budget_Goal(
+budget_goal_id int,
+user_id int,
+amount_saved float,
+name char(255),
+description char(255),
+start_date date,
+end_date date,
+PRIMARY KEY (budget_plan_id),
+FOREIGN KEY (user_id) REFERENCES Budget_Member
+ON DELETE CASCADE
+);
+
+
+CREATE TABLE Plan_Has_Goal(
+budget_plan_id int,
+budget_goal_id int,
+PRIMARY KEY (budget_plan_id, budget_goal_id),
+FOREIGN KEY (budget_plan_id) REFERENCES Plan_Budget_Plan
+ON DELETE NO ACTION
+FOREIGN KEY (budget_goal_id) REFERENCES Set_Budget_Goal
+ON DELETE NO ACTION
+);
+
+CREATE TABLE Group(
+group_id int,
+name char(255),
+description char(255),
+is_public boolean,
+PRIMARY KEY (group_id)
+);
+
+
+CREATE TABLE User_Belongs_To_Group(
+user_id int,
+group_id int,
+PRIMARY KEY (user_id, group_id),
+FOREIGN KEY (user_id) REFERENCES Budget_Member
+ON DELETE NO ACTION
+FOREIGN KEY (group_id) REFERENCES Group
+ON DELETE NO ACTION
+);
